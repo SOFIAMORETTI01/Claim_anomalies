@@ -11,7 +11,7 @@ import seaborn as sns
 # =====================
 # 1. Load Data
 # =====================
-df = pd.read_csv("Claim_anomalies/data/claims.csv")
+df = pd.read_csv("claim_anomalies/data/claims.csv")
 
 # =====================
 # 2. Preprocessing
