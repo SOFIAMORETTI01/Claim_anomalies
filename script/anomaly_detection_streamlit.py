@@ -44,7 +44,6 @@ st.markdown(
 def load_data():
     df = pd.read_csv("data/claims_scores.csv")
 
-")
     return df
 
 df = load_data()
