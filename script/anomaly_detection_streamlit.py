@@ -42,7 +42,9 @@ st.markdown(
 
 @st.cache_data
 def load_data():
-    df = pd.read_csv("claim_anomalies/data/claims_scores.csv")
+    df = pd.read_csv("../data/claims_scores.csv")
+
+")
     return df
 
 df = load_data()
