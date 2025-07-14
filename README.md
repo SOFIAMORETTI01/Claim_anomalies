@@ -46,11 +46,10 @@ Each model generates an **anomaly score** used to rank claims by suspicion level
    cd Claim_anomalies
 
 2. **Install dependencies:**
-  ```bash
+   ```bash
    pip install -r script/requirements.txt
 
-3. **Run scripts:**
-  ```bash
+4. **Run the scripts:**
+   ```bash
    python script/anomaly_detection.py
    streamlit run script/anomaly_detection_streamlit.py
-
