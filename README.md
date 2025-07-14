@@ -36,4 +36,21 @@ Implemented techniques include:
 
 Each model generates an **anomaly score** used to rank claims by suspicion level.
 
+---
+
+## 🛠️ How to Run Locally
+
+1. **Clone this repository:**
+   ```bash
+   git clone https://github.com/SOFIAMORETTI01/Claim_anomalies.git
+   cd Claim_anomalies
+
+2. **Install dependencies:**
+  ```bash
+   pip install -r script/requirements.txt
+
+3. **Run scripts:**
+  ```bash
+   python script/anomaly_detection.py
+   streamlit run script/anomaly_detection_streamlit.py
 
