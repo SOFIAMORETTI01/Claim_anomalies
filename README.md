@@ -1,4 +1,4 @@
-# 🔍 Claim Anomaly Detection
+# 🔍 Detecting atypical insurance claims
 
 This project detects atypical insurance claims using Isolation Forest, an unsupervised algorithm that scores anomalies based on behavioral patterns.  
 
