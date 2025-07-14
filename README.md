@@ -1,7 +1,9 @@
 # 🔍 Claim Anomaly Detection
 
 This project detects atypical insurance claims using Isolation Forest, an unsupervised algorithm that scores anomalies based on behavioral patterns.  
+
 It features interactive filters, applies UMAP for dimensionality reduction and HDBSCAN for clustering. SHAP values explain the key drivers behind each flagged claim.
+
 [![View App Online](https://img.shields.io/badge/🚀%20View%20Online-Streamlit-green?style=for-the-badge)](https://claimanomalies-kjdxxq5bse8b3axfpopagj.streamlit.app/)
 
 ---
