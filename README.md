@@ -38,7 +38,7 @@ Each model generates an **anomaly score** used to rank claims by suspicion level
 
 ---
 
-## 🛠️ How to Run Locally
+## 🛠️ How to run locally
 
 1. **Clone this repository:**
    ```bash
