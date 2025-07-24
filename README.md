@@ -49,7 +49,7 @@ Each model generates an **anomaly score** used to rank claims by suspicion level
    ```bash
    pip install -r script/requirements.txt
 
-4. **Run the scripts:**
+3. **Run the scripts:**
    ```bash
    python script/anomaly_detection.py
    streamlit run script/anomaly_detection_streamlit.py
