@@ -78,12 +78,23 @@ st.markdown("""
 print(df.columns.tolist())
 
 st.sidebar.header("🎛️ Filters")
+
+# Filtro de cobertura único (modelo por cobertura)
+selected_coverage = st.sidebar.selectbox("Select a coverage type to analyze", df["coverage_type"].unique())
+
+# Otros filtros secundarios
 Province = st.sidebar.multiselect("Province", options=df["province"].unique(), default=df["province"].unique())
-coverage = st.sidebar.multiselect("Coverage type", options=df["coverage_type"].unique(), default=df["coverage_type"].unique())
 risk_zone = st.sidebar.multiselect("Risk Zone", options=df["risk_zone"].unique(), default=df["risk_zone"].unique())
 
-filter = (df["province"].isin(Province)) & (df["coverage_type"].isin(coverage)) & (df["risk_zone"].isin(risk_zone))
+# Aplicar todos los filtros juntos
+filter = (
+    (df["coverage_type"] == selected_coverage) &
+    (df["province"].isin(Province)) &
+    (df["risk_zone"].isin(risk_zone))
+)
+
 df_filtered = df[filter]
+
 
 # =====================
 # 3. KPIs
@@ -275,7 +286,7 @@ features = [
     "insured_amount", "claim_amount", "months_since_policy_start",
     "claim_hour", "previous_claim_count", "customer_seniority_years"
 ]
-X = df[features]
+X = df_filtered[features]
 scaler = StandardScaler()
 X_scaled = scaler.fit_transform(X)
 X_scaled_df = pd.DataFrame(X_scaled, columns=features)
@@ -296,11 +307,11 @@ plt.rcParams.update({
 shap.plots.colors.red_blue = plt.get_cmap("Blues")
 
 # Top 100 y caso más sospechoso
-top_100_idx = df.sort_values("suspicion_score", ascending=False).index[:100]
+top_100_idx = df_filtered.sort_values("suspicion_score", ascending=False).index[:100]
 X_top100 = X_scaled_df.iloc[top_100_idx.to_list()]
 shap_values_top100 = explainer(X_top100)
 
-idx_most_suspicious = df["suspicion_score"].idxmax()
+idx_most_suspicious = df_filtered["suspicion_score"].idxmax()
 X_one = X_scaled_df.iloc[[idx_most_suspicious]]
 shap_value_one = explainer(X_one)
 
