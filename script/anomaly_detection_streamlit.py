@@ -290,9 +290,13 @@ top_100_idx = df.sort_values("suspicion_score", ascending=False).index[:100]
 X_top100 = X_scaled_df.iloc[top_100_idx.to_list()]
 shap_values_top100 = explainer(X_top100)
 
-st.markdown("#### 📊 Global explanation (Top 100 suspicious claims)")
 fig_beeswarm = plt.figure()
-shap.plots.beeswarm(shap_values_top100, show=False)
+shap.summary_plot(
+    shap_values_top100.values, 
+    X_top100, 
+    feature_names=features,
+    color=plt.get_cmap("PuBu")  # o "Blues", "viridis", "coolwarm", etc.
+)
 st.pyplot(fig_beeswarm)
 plt.close(fig_beeswarm)
 
