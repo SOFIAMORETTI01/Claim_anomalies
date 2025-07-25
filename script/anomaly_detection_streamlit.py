@@ -247,21 +247,17 @@ st.download_button(
 # =====================
 # 10. Explainability of anomaly detection (SHAP)
 # =====================
-st.markdown("""
-<div style="background-color:#2c3e50; padding: 10px 15px; border-radius: 5px;">
-    <h3 style="color:white; margin:0;">Explainability of anomaly detection (SHAP)</h3>
-</div>
-""", unsafe_allow_html=True)
-
-st.markdown("<div style='margin-top: 20px;'></div>", unsafe_allow_html=True)
+# =====================
+# 10. Explainability of anomaly detection (SHAP)
+# =====================
+st.markdown("### 🔍 Explainability of anomaly detection (SHAP)")
 
 st.markdown("""
-<div style="background-color: #f1f6fb; border-left: 4px solid #4a90e2; padding: 10px; border-radius: 6px;">
-    We use SHAP (SHapley Additive exPlanations) to interpret how the model determines whether a claim is atypical.<br><br>
-    🔹 The first plot shows which variables are most important across the top 100 suspicious claims.<br>
-    🔹 The second explains the most suspicious individual claim, breaking down the exact variable contributions.
-</div>
-""", unsafe_allow_html=True)
+We use **SHAP (SHapley Additive exPlanations)** to understand how the model determines whether a claim is atypical.
+
+- 📊 The **first plot** shows which variables are most important across the top 100 suspicious claims.
+- 📉 The **second** breaks down the variable impact for the **most suspicious claim**.
+""")
 
 # === Prepare the model again for SHAP ===
 features = [
@@ -280,48 +276,33 @@ iso_model.fit(X_scaled_df)
 # Create SHAP explainer
 explainer = shap.Explainer(iso_model, X_scaled_df)
 
+# Cambiar tamaño de fuente para que se vea mejor en Streamlit
+plt.rcParams.update({'font.size': 9})
+
 # === SHAP Global: Beeswarm ===
+st.markdown("#### 📊 Global explanation (Top 100 suspicious claims)")
+
 top_100_idx = df.sort_values("suspicion_score", ascending=False).index[:100]
 X_top100 = X_scaled_df.iloc[top_100_idx.to_list()]
 shap_values_top100 = explainer(X_top100)
 
-st.markdown("#### 📊 Global explanation (Top 100 suspicious claims)")
-
-st.markdown("""
-<div style="background-color: #ffffff; border: 1px solid #cccccc; padding: 15px; border-radius: 8px; margin-top: 10px; margin-bottom: 20px;">
-""", unsafe_allow_html=True)
-
-plt.rcParams.update({'font.size': 9})  # Tamaño de fuente global para los gráficos SHAP
 fig_beeswarm = plt.figure()
 shap.plots.beeswarm(shap_values_top100, show=False)
 st.pyplot(fig_beeswarm)
 plt.close(fig_beeswarm)
-
-st.markdown("</div>", unsafe_allow_html=True)
 
 # === SHAP Individual: Waterfall ===
 st.markdown("#### 📉 Individual explanation (Most suspicious claim)")
 
-st.markdown("""
-<div style="background-color: #ffffff; border: 1px solid #cccccc; padding: 15px; border-radius: 8px; margin-top: 10px; margin-bottom: 20px;">
-""", unsafe_allow_html=True)
-
 idx_most_suspicious = df["suspicion_score"].idxmax()
 X_one = X_scaled_df.iloc[[idx_most_suspicious]]
 shap_value_one = explainer(X_one)
-
-plt.rcParams.update({'font.size': 9})  # Tamaño de fuente global para los gráficos SHAP
-fig_beeswarm = plt.figure()
-shap.plots.beeswarm(shap_values_top100, show=False)
-st.pyplot(fig_beeswarm)
-plt.close(fig_beeswarm)
 
 fig_waterfall = plt.figure()
 shap.plots.waterfall(shap_value_one[0], show=False)
 st.pyplot(fig_waterfall)
 plt.close(fig_waterfall)
 
-st.markdown("</div>", unsafe_allow_html=True)
 
 # =====================
 # 8. Anomaly Distribution by Coverage Type
