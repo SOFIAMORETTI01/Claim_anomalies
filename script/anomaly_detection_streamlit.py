@@ -291,6 +291,7 @@ st.markdown("""
 <div style="background-color: #ffffff; border: 1px solid #cccccc; padding: 15px; border-radius: 8px; margin-top: 10px; margin-bottom: 20px;">
 """, unsafe_allow_html=True)
 
+plt.rcParams.update({'font.size': 9})  # Tamaño de fuente global para los gráficos SHAP
 fig_beeswarm = plt.figure()
 shap.plots.beeswarm(shap_values_top100, show=False)
 st.pyplot(fig_beeswarm)
@@ -308,6 +309,12 @@ st.markdown("""
 idx_most_suspicious = df["suspicion_score"].idxmax()
 X_one = X_scaled_df.iloc[[idx_most_suspicious]]
 shap_value_one = explainer(X_one)
+
+plt.rcParams.update({'font.size': 9})  # Tamaño de fuente global para los gráficos SHAP
+fig_beeswarm = plt.figure()
+shap.plots.beeswarm(shap_values_top100, show=False)
+st.pyplot(fig_beeswarm)
+plt.close(fig_beeswarm)
 
 fig_waterfall = plt.figure()
 shap.plots.waterfall(shap_value_one[0], show=False)
