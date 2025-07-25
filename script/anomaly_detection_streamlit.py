@@ -312,8 +312,12 @@ top_100_idx = df_filtered["suspicion_score"].sort_values(ascending=False).reset_
 X_top100 = X_scaled_df.iloc[top_100_idx.to_list()]
 shap_values_top100 = explainer(X_top100)
 
-idx_most_suspicious = df_filtered["suspicion_score"].idxmax()
+# Resetear el índice para asegurar alineación
+df_filtered_reset = df_filtered.reset_index(drop=True)
+
+idx_most_suspicious = df_filtered_reset["suspicion_score"].idxmax()
 X_one = X_scaled_df.iloc[[idx_most_suspicious]]
+
 shap_value_one = explainer(X_one)
 
 # Columnas y títulos estilizados
