@@ -176,7 +176,7 @@ st.markdown(
 )
 
 fig1, ax1 = plt.subplots(figsize=(10, 4))
-sns.histplot(data=np.array(df["suspicion_score"]), bins=50, kde=True, color="steelblue")
+sns.histplot(data=np.array(df_filtered["suspicion_score"]), bins=50, kde=True, color="steelblue")
 ax1.set_xlabel("Anomaly score — higher values indicate greater atypicality", fontsize=10)
 ax1.set_ylabel("Claim frequency", fontsize=10)
 st.pyplot(fig1)
