@@ -291,7 +291,7 @@ X_top100 = X_scaled_df.iloc[top_100_idx.to_list()]
 shap_values_top100 = explainer(X_top100)
 
 # 👇 Change the default colormap for SHAP
-shap.plots.colors.red_blue = plt.get_cmap("PuBu")
+shap.plots.colors.red_blue = plt.get_cmap("Blues")
 
 # Generate plot with updated color
 fig_beeswarm = plt.figure()
