@@ -286,10 +286,11 @@ features = [
     "insured_amount", "claim_amount", "months_since_policy_start",
     "claim_hour", "previous_claim_count", "customer_seniority_years"
 ]
-X = df_filtered[features]
+X = df_filtered[features].reset_index(drop=True)
 scaler = StandardScaler()
 X_scaled = scaler.fit_transform(X)
 X_scaled_df = pd.DataFrame(X_scaled, columns=features)
+
 
 # Modelo y SHAP
 iso_model = IsolationForest(contamination=0.015, random_state=42)
@@ -307,7 +308,7 @@ plt.rcParams.update({
 shap.plots.colors.red_blue = plt.get_cmap("Blues")
 
 # Top 100 y caso más sospechoso
-top_100_idx = df_filtered.sort_values("suspicion_score", ascending=False).index[:100]
+top_100_idx = df_filtered["suspicion_score"].sort_values(ascending=False).reset_index(drop=True).index[:100]
 X_top100 = X_scaled_df.iloc[top_100_idx.to_list()]
 shap_values_top100 = explainer(X_top100)
 
