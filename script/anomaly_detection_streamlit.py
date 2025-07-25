@@ -269,7 +269,7 @@ st.markdown("""
     🔹 The right one explains the most suspicious individual claim, breaking down the exact variable contributions.
 </div>
 """, unsafe_allow_html=True)
-
+st.markdown("<div style='margin-top: 20px;'></div>", unsafe_allow_html=True)
 # Preprocesamiento
 features = [
     "insured_amount", "claim_amount", "months_since_policy_start",
