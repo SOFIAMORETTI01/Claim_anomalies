@@ -244,61 +244,59 @@ st.download_button(
     mime="text/csv"
 )
 
-# =====================
-# 10. Explainability of anomaly detection (SHAP)
-# =====================
-# =====================
-# 10. Explainability of anomaly detection (SHAP)
-# =====================
-st.markdown("### 🔍 Explainability of anomaly detection (SHAP)")
+import shap
+from sklearn.ensemble import IsolationForest
+from sklearn.preprocessing import StandardScaler
 
+# Título general
+st.markdown("## 🔍 Explainability of Anomalies (SHAP)")
+
+# Descripción
 st.markdown("""
-We use **SHAP (SHapley Additive exPlanations)** to understand how the model determines whether a claim is atypical.
-
-- 📊 The **first plot** shows which variables are most important across the top 100 suspicious claims.
-- 📉 The **second** breaks down the variable impact for the **most suspicious claim**.
+SHAP (SHapley Additive exPlanations) helps interpret how the model identifies atypical claims.
+- **Global View**: Top features impacting the 100 most suspicious claims.
+- **Individual View**: Detailed explanation of the most suspicious claim.
 """)
 
-# === Prepare the model again for SHAP ===
+# === Preparar datos ===
 features = [
     "insured_amount", "claim_amount", "months_since_policy_start",
     "claim_hour", "previous_claim_count", "customer_seniority_years"
 ]
-
 X = df[features]
 scaler = StandardScaler()
 X_scaled = scaler.fit_transform(X)
 X_scaled_df = pd.DataFrame(X_scaled, columns=features)
 
+# === Entrenar Isolation Forest ===
 iso_model = IsolationForest(contamination=0.015, random_state=42)
 iso_model.fit(X_scaled_df)
 
-# Create SHAP explainer
+# === SHAP Explainer ===
 explainer = shap.Explainer(iso_model, X_scaled_df)
 
-# Cambiar tamaño de fuente para que se vea mejor en Streamlit
-plt.rcParams.update({'font.size': 9})
-
-# === SHAP Global: Beeswarm ===
-st.markdown("#### 📊 Global explanation (Top 100 suspicious claims)")
-
+# === Global Explanation (Beeswarm) ===
 top_100_idx = df.sort_values("suspicion_score", ascending=False).index[:100]
 X_top100 = X_scaled_df.iloc[top_100_idx.to_list()]
 shap_values_top100 = explainer(X_top100)
 
-fig_beeswarm = plt.figure()
+st.markdown("### 📊 Global Explanation")
+
+plt.rcParams.update({'font.size': 10, 'axes.titlesize': 12})
+fig_beeswarm = plt.figure(figsize=(10, 5))
 shap.plots.beeswarm(shap_values_top100, show=False)
 st.pyplot(fig_beeswarm)
 plt.close(fig_beeswarm)
 
-# === SHAP Individual: Waterfall ===
-st.markdown("#### 📉 Individual explanation (Most suspicious claim)")
+# === Individual Explanation (Waterfall) ===
+st.markdown("### 📉 Individual Explanation")
 
 idx_most_suspicious = df["suspicion_score"].idxmax()
 X_one = X_scaled_df.iloc[[idx_most_suspicious]]
 shap_value_one = explainer(X_one)
 
-fig_waterfall = plt.figure()
+plt.rcParams.update({'font.size': 10, 'axes.titlesize': 12})
+fig_waterfall = plt.figure(figsize=(10, 6))
 shap.plots.waterfall(shap_value_one[0], show=False)
 st.pyplot(fig_waterfall)
 plt.close(fig_waterfall)
