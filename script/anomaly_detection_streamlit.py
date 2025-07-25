@@ -248,9 +248,9 @@ st.download_button(
 # 10. Explainability of anomaly detection (SHAP)
 # =====================
 
-# =====================
-# 10. Explainability of anomaly detection (SHAP)
-# =====================
+import shap
+from sklearn.ensemble import IsolationForest
+from sklearn.preprocessing import StandardScaler
 
 st.markdown("""
 <div style="background-color:#2c3e50; padding: 10px 15px; border-radius: 5px;">
@@ -290,13 +290,15 @@ top_100_idx = df.sort_values("suspicion_score", ascending=False).index[:100]
 X_top100 = X_scaled_df.iloc[top_100_idx.to_list()]
 shap_values_top100 = explainer(X_top100)
 
-# 👇 Change the default colormap for SHAP
+# Cambiar paleta de colores
 shap.plots.colors.red_blue = plt.get_cmap("Blues")
 
-# Wrapped in bordered section
+# Título
+st.markdown("### 📊 Global explanation (Top 100 suspicious claims)")
+
+# Borde alrededor del gráfico
 st.markdown("""
-<div style="background-color: #ffffff; border: 2px solid #cccccc; padding: 15px; border-radius: 8px; margin-bottom: 25px;">
-<h4 style='color: #374151;'>📊 Global explanation (Top 100 suspicious claims)</h4>
+<div style="border: 2px solid #ccc; border-radius: 10px; padding: 15px;">
 """, unsafe_allow_html=True)
 
 fig_beeswarm = plt.figure()
@@ -307,14 +309,16 @@ plt.close(fig_beeswarm)
 st.markdown("</div>", unsafe_allow_html=True)
 
 # === SHAP Individual: Waterfall ===
-st.markdown("""
-<div style="background-color: #ffffff; border: 2px solid #cccccc; padding: 15px; border-radius: 8px;">
-<h4 style='color: #374151;'>📉 Individual explanation (Most suspicious claim)</h4>
-""", unsafe_allow_html=True)
+st.markdown("#### 📉 Individual explanation (Most suspicious claim)")
 
 idx_most_suspicious = df["suspicion_score"].idxmax()
 X_one = X_scaled_df.iloc[[idx_most_suspicious]]
 shap_value_one = explainer(X_one)
+
+# Borde para el gráfico individual
+st.markdown("""
+<div style="border: 2px solid #ccc; border-radius: 10px; padding: 15px;">
+""", unsafe_allow_html=True)
 
 fig_waterfall = plt.figure()
 shap.plots.waterfall(shap_value_one[0], show=False)
