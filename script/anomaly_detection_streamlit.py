@@ -248,10 +248,6 @@ st.download_button(
 # 10. Explainability of anomaly detection (SHAP)
 # =====================
 
-# =====================
-# 10. Explainability of anomaly detection (SHAP)
-# =====================
-
 import shap
 from sklearn.ensemble import IsolationForest
 from sklearn.preprocessing import StandardScaler
@@ -289,18 +285,16 @@ iso_model.fit(X_scaled_df)
 # Create SHAP explainer
 explainer = shap.Explainer(iso_model, X_scaled_df)
 
-# === SHAP Global: Bar Plot (replaces beeswarm) ===
+# === SHAP Global: Beeswarm ===
 top_100_idx = df.sort_values("suspicion_score", ascending=False).index[:100]
 X_top100 = X_scaled_df.iloc[top_100_idx.to_list()]
 shap_values_top100 = explainer(X_top100)
 
 st.markdown("#### 📊 Global explanation (Top 100 suspicious claims)")
-fig_bar, ax_bar = plt.subplots(figsize=(10, 5))
-shap.plots.bar(shap_values_top100, max_display=6, show=False)
-plt.title("SHAP Feature Importance (Top 100 Suspicious Claims)", fontsize=12, color="#1f77b4")
-plt.tight_layout()
-st.pyplot(fig_bar)
-plt.close(fig_bar)
+fig_beeswarm = plt.figure()
+shap.plots.beeswarm(shap_values_top100, show=False)
+st.pyplot(fig_beeswarm)
+plt.close(fig_beeswarm)
 
 # === SHAP Individual: Waterfall ===
 st.markdown("#### 📉 Individual explanation (Most suspicious claim)")
