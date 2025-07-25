@@ -204,7 +204,7 @@ st.markdown(
 
 fig2, ax2 = plt.subplots(figsize=(10, 5))
 
-blue_palette = ["#4a90e2", "#a7c7e7","#A6A6A6"]  
+blue_palette = ["#A6A6A6","#4a90e2", "#a7c7e7"]  
 
 sns.scatterplot(
     data=df_filtered,
@@ -346,43 +346,6 @@ with col2:
     shap.plots.waterfall(shap_value_one[0], show=False)
     st.pyplot(fig_waterfall)
     plt.close(fig_waterfall)
-
-
-# =====================
-# 8. Anomaly Distribution by Coverage Type
-# =====================
-st.markdown("""
-<div style="background-color:#2c3e50; padding: 10px 15px; border-radius: 5px;">
-    <h3 style="color:white; margin:0;">Anomaly distribution by coverage type</h3>
-</div>
-""", unsafe_allow_html=True)
-
-st.markdown("<div style='margin-top: 20px;'></div>", unsafe_allow_html=True)
-
-st.markdown(
-    '''
-    <div style="background-color: #f1f6fb; border-left: 4px solid #4a90e2; padding: 10px; border-radius: 6px;">
-        Objective: identify which types of coverage have the highest proportion of atypical cases.
-    </div>
-    ''',
-    unsafe_allow_html=True
-)
-
-fig, ax = plt.subplots(figsize=(10, 5))
-sns.barplot(
-    data=df_filtered,
-    x="coverage_type",
-    y="is_suspicious",
-    estimator=lambda x: sum(x)/len(x),
-    ci=None,
-    ax=ax,
-    palette="Blues"
-)
-ax.set_title("Proportion of anomalies by coverage type")
-ax.set_ylabel("Proportion of atypical cases")
-ax.set_xlabel("Coverage type")
-st.pyplot(fig)
-
 
 
 # =====================
