@@ -204,7 +204,7 @@ st.markdown(
 
 fig2, ax2 = plt.subplots(figsize=(10, 5))
 
-blue_palette = ["#4a90e2", "#a7c7e7"]  
+blue_palette = ["#4a90e2", "#a7c7e7","#A6A6A6"]  
 
 sns.scatterplot(
     data=df_filtered,
