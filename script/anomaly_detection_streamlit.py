@@ -286,13 +286,25 @@ X_top100 = X_scaled_df.iloc[top_100_idx.to_list()]
 shap_values_top100 = explainer(X_top100)
 
 st.markdown("#### 📊 Global explanation (Top 100 suspicious claims)")
+
+st.markdown("""
+<div style="background-color: #ffffff; border: 1px solid #cccccc; padding: 15px; border-radius: 8px; margin-top: 10px; margin-bottom: 20px;">
+""", unsafe_allow_html=True)
+
 fig_beeswarm = plt.figure()
 shap.plots.beeswarm(shap_values_top100, show=False)
 st.pyplot(fig_beeswarm)
 plt.close(fig_beeswarm)
 
+st.markdown("</div>", unsafe_allow_html=True)
+
 # === SHAP Individual: Waterfall ===
 st.markdown("#### 📉 Individual explanation (Most suspicious claim)")
+
+st.markdown("""
+<div style="background-color: #ffffff; border: 1px solid #cccccc; padding: 15px; border-radius: 8px; margin-top: 10px; margin-bottom: 20px;">
+""", unsafe_allow_html=True)
+
 idx_most_suspicious = df["suspicion_score"].idxmax()
 X_one = X_scaled_df.iloc[[idx_most_suspicious]]
 shap_value_one = explainer(X_one)
@@ -301,6 +313,9 @@ fig_waterfall = plt.figure()
 shap.plots.waterfall(shap_value_one[0], show=False)
 st.pyplot(fig_waterfall)
 plt.close(fig_waterfall)
+
+st.markdown("</div>", unsafe_allow_html=True)
+
 # =====================
 # 8. Anomaly Distribution by Coverage Type
 # =====================
