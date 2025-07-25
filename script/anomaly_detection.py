@@ -70,11 +70,31 @@ plt.grid(True)
 plt.close()
 
 # =====================
-# 8. SHAP - explicabilidad
+# 8. SHAP - Explainability
 # =====================
-explainer = shap.Explainer(iso_model, X_scaled)
-shap_values = explainer(X_scaled[:1])  
-shap.plots.waterfall(shap_values[0], show=False)
+
+# 8.0 Convert scaled features into a DataFrame with column names
+X_scaled_df = pd.DataFrame(X_scaled, columns=features)
+
+# 8.1 Create SHAP explainer with feature names
+explainer = shap.Explainer(iso_model, X_scaled_df)
+
+# 8.2 SHAP global: beeswarm plot for top 100 most suspicious claims
+top_100_idx = df.sort_values("suspicion_score", ascending=False).index[:100]
+X_top100 = X_scaled_df.iloc[top_100_idx.to_list()]
+shap_values_top100 = explainer(X_top100)
+
+print("📊 SHAP Summary Plot (Top 100 most suspicious claims):")
+shap.plots.beeswarm(shap_values_top100)
+plt.close()
+
+# 8.3 SHAP individual: waterfall plot for the most suspicious claim
+idx_most_suspicious = df["suspicion_score"].idxmax()
+X_one = X_scaled_df.iloc[[idx_most_suspicious]]
+shap_value_one = explainer(X_one)
+
+print("📉 SHAP Waterfall Plot (Most suspicious claim):")
+shap.plots.waterfall(shap_value_one[0])
 plt.close()
 
 # =====================
