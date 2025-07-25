@@ -1,7 +1,9 @@
 streamlit
 pandas
-numpy
-scikit-learn
 matplotlib
 seaborn
+numpy
+scikit-learn
+shap
 umap-learn
+hdbscan
