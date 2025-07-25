@@ -252,11 +252,10 @@ st.download_button(
 # 10. Explainability of anomaly detection (SHAP)
 # =====================
 
-import shap
-from sklearn.ensemble import IsolationForest
-from sklearn.preprocessing import StandardScaler
+# =====================
+# 10. Explainability (SHAP)
+# =====================
 
-# Estilos y explicación textual
 st.markdown("""
 <div style="background-color:#2c3e50; padding: 10px 15px; border-radius: 5px;">
     <h3 style="color:white; margin:0;">Explainability of anomaly detection (SHAP)</h3>
@@ -273,54 +272,14 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
-# === Prepare the model again for SHAP ===
-features = [
-    "insured_amount", "claim_amount", "months_since_policy_start",
-    "claim_hour", "previous_claim_count", "customer_seniority_years"
-]
+# Load and display the SHAP beeswarm plot
+st.markdown("#### 📊 Global explanation (Top 100 suspicious claims)")
+st.image("plots/shap_beeswarm_top100.png", use_column_width=True)
 
-X = df[features]
-scaler = StandardScaler()
-X_scaled = scaler.fit_transform(X)
-X_scaled_df = pd.DataFrame(X_scaled, columns=features)
+# Load and display the SHAP waterfall plot
+st.markdown("#### 📉 Individual explanation (Most suspicious claim)")
+st.image("plots/shap_waterfall_most_suspicious.png", use_column_width=True)
 
-iso_model = IsolationForest(contamination=0.015, random_state=42)
-iso_model.fit(X_scaled_df)
-
-# Create SHAP explainer
-explainer = shap.Explainer(iso_model, X_scaled_df)
-
-# === SHAP Global: Beeswarm ===
-top_100_idx = df.sort_values("suspicion_score", ascending=False).index[:100]
-X_top100 = X_scaled_df.iloc[top_100_idx.to_list()]
-shap_values_top100 = explainer(X_top100)
-
-# Colormap
-shap.plots.colors.red_blue = plt.get_cmap("Blues")
-
-# Figura con borde alrededor
-fig_beeswarm = plt.figure(facecolor='white')
-ax = fig_beeswarm.add_subplot(111)
-shap.plots.beeswarm(shap_values_top100, show=False)
-
-# Añadir borde alrededor del gráfico
-for spine in ax.spines.values():
-    spine.set_edgecolor('#cccccc')  # gris claro
-    spine.set_linewidth(1.5)
-
-st.pyplot(fig_beeswarm)
-plt.close(fig_beeswarm)
-
-# === SHAP Individual: Waterfall ===
-idx_most_suspicious = df["suspicion_score"].idxmax()
-X_one = X_scaled_df.iloc[[idx_most_suspicious]]
-shap_value_one = explainer(X_one)
-
-# Borde también para el gráfico individual
-fig_waterfall = plt.figure(facecolor='white')
-shap.plots.waterfall(shap_value_one[0], show=False)
-st.pyplot(fig_waterfall)
-plt.close(fig_waterfall)
 
 # =====================
 # 8. Anomaly Distribution by Coverage Type
