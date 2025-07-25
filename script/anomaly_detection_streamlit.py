@@ -248,9 +248,9 @@ st.download_button(
 # 10. Explainability of anomaly detection (SHAP)
 # =====================
 
-import shap
-from sklearn.ensemble import IsolationForest
-from sklearn.preprocessing import StandardScaler
+# =====================
+# 10. Explainability of anomaly detection (SHAP)
+# =====================
 
 st.markdown("""
 <div style="background-color:#2c3e50; padding: 10px 15px; border-radius: 5px;">
@@ -293,15 +293,25 @@ shap_values_top100 = explainer(X_top100)
 # 👇 Change the default colormap for SHAP
 shap.plots.colors.red_blue = plt.get_cmap("Blues")
 
-# Generate plot with updated color
+# Wrapped in bordered section
+st.markdown("""
+<div style="background-color: #ffffff; border: 2px solid #cccccc; padding: 15px; border-radius: 8px; margin-bottom: 25px;">
+<h4 style='color: #374151;'>📊 Global explanation (Top 100 suspicious claims)</h4>
+""", unsafe_allow_html=True)
+
 fig_beeswarm = plt.figure()
 shap.plots.beeswarm(shap_values_top100, show=False)
 st.pyplot(fig_beeswarm)
 plt.close(fig_beeswarm)
 
+st.markdown("</div>", unsafe_allow_html=True)
 
 # === SHAP Individual: Waterfall ===
-st.markdown("#### 📉 Individual explanation (Most suspicious claim)")
+st.markdown("""
+<div style="background-color: #ffffff; border: 2px solid #cccccc; padding: 15px; border-radius: 8px;">
+<h4 style='color: #374151;'>📉 Individual explanation (Most suspicious claim)</h4>
+""", unsafe_allow_html=True)
+
 idx_most_suspicious = df["suspicion_score"].idxmax()
 X_one = X_scaled_df.iloc[[idx_most_suspicious]]
 shap_value_one = explainer(X_one)
@@ -310,6 +320,9 @@ fig_waterfall = plt.figure()
 shap.plots.waterfall(shap_value_one[0], show=False)
 st.pyplot(fig_waterfall)
 plt.close(fig_waterfall)
+
+st.markdown("</div>", unsafe_allow_html=True)
+
 
 # =====================
 # 8. Anomaly Distribution by Coverage Type
