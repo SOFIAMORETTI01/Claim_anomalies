@@ -252,24 +252,17 @@ import shap
 from sklearn.ensemble import IsolationForest
 from sklearn.preprocessing import StandardScaler
 
-# Estilos y explicación textual
-st.markdown("""
-<div style="background-color:#2c3e50; padding: 10px 15px; border-radius: 5px;">
-    <h3 style="color:white; margin:0;">Explainability of anomaly detection (SHAP)</h3>
-</div>
-""", unsafe_allow_html=True)
-
-st.markdown("<div style='margin-top: 20px;'></div>", unsafe_allow_html=True)
+# Título de la sección
+st.markdown("## 🔍 Explainability of Anomaly Detection (SHAP)")
 
 st.markdown("""
-<div style="background-color: #f1f6fb; border-left: 4px solid #4a90e2; padding: 10px; border-radius: 6px;">
-    We use SHAP (SHapley Additive exPlanations) to interpret how the model determines whether a claim is atypical.<br><br>
-    🔹 The first plot shows which variables are most important across the top 100 suspicious claims.<br>
-    🔹 The second explains the most suspicious individual claim, breaking down the exact variable contributions.
-</div>
-""", unsafe_allow_html=True)
+We use **SHAP (SHapley Additive exPlanations)** to interpret how the model determines whether a claim is atypical.
 
-# Prepara el modelo nuevamente para SHAP
+- The left plot shows which variables are most important across the top 100 suspicious claims.
+- The right one explains the most suspicious individual claim.
+""")
+
+# Prepara el modelo para SHAP
 features = [
     "insured_amount", "claim_amount", "months_since_policy_start",
     "claim_hour", "previous_claim_count", "customer_seniority_years"
@@ -283,53 +276,46 @@ X_scaled_df = pd.DataFrame(X_scaled, columns=features)
 iso_model = IsolationForest(contamination=0.015, random_state=42)
 iso_model.fit(X_scaled_df)
 
-# Crea el explainer de SHAP
+# SHAP explainer
 explainer = shap.Explainer(iso_model, X_scaled_df)
 
-# Ajustes de estilo para que se vea como el resto del dashboard
+# Estilos globales para los gráficos
 plt.rcParams.update({
-    "font.size": 9,
-    "axes.titlesize": 11,
-    "axes.labelsize": 9,
+    "font.size": 8,
+    "axes.titlesize": 10,
+    "axes.labelsize": 8,
     "xtick.labelsize": 8,
     "ytick.labelsize": 8,
-    "legend.fontsize": 9
+    "legend.fontsize": 8
 })
-
 shap.plots.colors.red_blue = plt.get_cmap("Blues")
 
-# SHAP Global — Beeswarm
+# === SHAP Beeswarm (Top 100 Suspicious) ===
 top_100_idx = df.sort_values("suspicion_score", ascending=False).index[:100]
 X_top100 = X_scaled_df.iloc[top_100_idx.to_list()]
 shap_values_top100 = explainer(X_top100)
 
-st.markdown("""
-<div style="border: 1px solid #ccc; border-radius: 10px; padding: 10px;">
-""", unsafe_allow_html=True)
-
-fig_beeswarm = plt.figure()
-shap.plots.beeswarm(shap_values_top100, show=False)
-st.pyplot(fig_beeswarm)
-plt.close(fig_beeswarm)
-
-st.markdown("</div>", unsafe_allow_html=True)
-
-# SHAP Individual — Waterfall
+# === SHAP Waterfall (Most Suspicious Case) ===
 idx_most_suspicious = df["suspicion_score"].idxmax()
 X_one = X_scaled_df.iloc[[idx_most_suspicious]]
 shap_value_one = explainer(X_one)
 
-st.markdown("""
-<div style="border: 1px solid #ccc; border-radius: 10px; padding: 10px; margin-top: 25px;">
-""", unsafe_allow_html=True)
+# Mostrar los dos gráficos lado a lado
+col1, col2 = st.columns(2)
 
-fig_waterfall = plt.figure()
-shap.plots.waterfall(shap_value_one[0], show=False)
-st.pyplot(fig_waterfall)
-plt.close(fig_waterfall)
+with col1:
+    st.markdown("**📊 Global Feature Importance**")
+    fig_beeswarm = plt.figure(figsize=(6, 4))
+    shap.plots.beeswarm(shap_values_top100, show=False)
+    st.pyplot(fig_beeswarm)
+    plt.close(fig_beeswarm)
 
-st.markdown("</div>", unsafe_allow_html=True)
-
+with col2:
+    st.markdown("**📉 Individual Explanation**")
+    fig_waterfall = plt.figure(figsize=(6, 4))
+    shap.plots.waterfall(shap_value_one[0], show=False)
+    st.pyplot(fig_waterfall)
+    plt.close(fig_waterfall)
 
 # =====================
 # 9. Anomaly Frequency by Time of Day
