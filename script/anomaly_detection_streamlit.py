@@ -244,7 +244,6 @@ st.download_button(
     mime="text/csv"
 )
 
-
 # =====================
 # 10. Explainability of anomaly detection (SHAP)
 # =====================
@@ -270,7 +269,7 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
-# === Prepare the model again for SHAP ===
+# Prepara el modelo nuevamente para SHAP
 features = [
     "insured_amount", "claim_amount", "months_since_policy_start",
     "claim_hour", "previous_claim_count", "customer_seniority_years"
@@ -284,17 +283,26 @@ X_scaled_df = pd.DataFrame(X_scaled, columns=features)
 iso_model = IsolationForest(contamination=0.015, random_state=42)
 iso_model.fit(X_scaled_df)
 
-# Create SHAP explainer
+# Crea el explainer de SHAP
 explainer = shap.Explainer(iso_model, X_scaled_df)
 
-# === SHAP Global: Beeswarm ===
+# Ajustes de estilo para que se vea como el resto del dashboard
+plt.rcParams.update({
+    "font.size": 9,
+    "axes.titlesize": 11,
+    "axes.labelsize": 9,
+    "xtick.labelsize": 8,
+    "ytick.labelsize": 8,
+    "legend.fontsize": 9
+})
+
+shap.plots.colors.red_blue = plt.get_cmap("Blues")
+
+# SHAP Global — Beeswarm
 top_100_idx = df.sort_values("suspicion_score", ascending=False).index[:100]
 X_top100 = X_scaled_df.iloc[top_100_idx.to_list()]
 shap_values_top100 = explainer(X_top100)
 
-shap.plots.colors.red_blue = plt.get_cmap("Blues")
-
-# Borde fino solo para el gráfico beeswarm
 st.markdown("""
 <div style="border: 1px solid #ccc; border-radius: 10px; padding: 10px;">
 """, unsafe_allow_html=True)
@@ -306,7 +314,7 @@ plt.close(fig_beeswarm)
 
 st.markdown("</div>", unsafe_allow_html=True)
 
-# === SHAP Individual: Waterfall ===
+# SHAP Individual — Waterfall
 idx_most_suspicious = df["suspicion_score"].idxmax()
 X_one = X_scaled_df.iloc[[idx_most_suspicious]]
 shap_value_one = explainer(X_one)
