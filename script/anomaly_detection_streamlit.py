@@ -290,19 +290,15 @@ top_100_idx = df.sort_values("suspicion_score", ascending=False).index[:100]
 X_top100 = X_scaled_df.iloc[top_100_idx.to_list()]
 shap_values_top100 = explainer(X_top100)
 
-# 👇 Set a custom color palette for SHAP (viridis looks professional)
-shap.plots.colors.red_blue = plt.get_cmap("viridis")
+# 👇 Change the default colormap for SHAP
+shap.plots.colors.red_blue = plt.get_cmap("Blues")
 
-st.markdown("#### 📊 Global explanation (Top 100 suspicious claims)")
-fig_beeswarm = plt.figure(figsize=(10, 6))
-shap.summary_plot(
-    shap_values_top100.values,
-    X_top100,
-    feature_names=features,
-    show=False
-)
+# Generate plot with updated color
+fig_beeswarm = plt.figure()
+shap.plots.beeswarm(shap_values_top100, show=False)
 st.pyplot(fig_beeswarm)
 plt.close(fig_beeswarm)
+
 
 # === SHAP Individual: Waterfall ===
 st.markdown("#### 📉 Individual explanation (Most suspicious claim)")
@@ -314,8 +310,6 @@ fig_waterfall = plt.figure()
 shap.plots.waterfall(shap_value_one[0], show=False)
 st.pyplot(fig_waterfall)
 plt.close(fig_waterfall)
-
-
 
 # =====================
 # 8. Anomaly Distribution by Coverage Type
