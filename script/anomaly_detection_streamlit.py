@@ -309,11 +309,11 @@ col1, col2 = st.columns(2)
 
 with col1:
     st.markdown("""
-    <div style="background-color:#2c3e50; padding: 6px 10px; border-radius: 5px; text-align:center;">
-        <h4 style="color:white; font-size:14px; margin:0;">📊 Global Feature Importance</h4>
+    <div style="background-color:#2c3e50; width: 100, padding: 6px 10px; border-radius: 5px; text-align:center;">
+        <h4 style="color:white; font-size:16px; margin:0;"> Global Feature Importance</h4>
     </div>
     """, unsafe_allow_html=True)
-    
+    st.markdown("<div style='margin-top: 20px;'></div>", unsafe_allow_html=True)
     fig_beeswarm = plt.figure(figsize=(6, 4))
     shap.plots.beeswarm(shap_values_top100, show=False)
     st.pyplot(fig_beeswarm)
@@ -321,15 +321,53 @@ with col1:
 
 with col2:
     st.markdown("""
-    <div style="background-color:#2c3e50; padding: 6px 10px; border-radius: 5px; text-align:center;">
-        <h4 style="color:white; font-size:14px; margin:0;">📉 Individual Explanation</h4>
+    <div style="background-color:#2c3e50; width: 100,padding: 6px 10px; border-radius: 5px; text-align:center;">
+        <h4 style="color:white; font-size:16px; margin:0;"> Individual Explanation</h4>
     </div>
     """, unsafe_allow_html=True)
-    
+    st.markdown("<div style='margin-top: 20px;'></div>", unsafe_allow_html=True)
     fig_waterfall = plt.figure(figsize=(6, 4))
     shap.plots.waterfall(shap_value_one[0], show=False)
     st.pyplot(fig_waterfall)
     plt.close(fig_waterfall)
+
+
+# =====================
+# 8. Anomaly Distribution by Coverage Type
+# =====================
+st.markdown("""
+<div style="background-color:#2c3e50; padding: 10px 15px; border-radius: 5px;">
+    <h3 style="color:white; margin:0;">Anomaly distribution by coverage type</h3>
+</div>
+""", unsafe_allow_html=True)
+
+st.markdown("<div style='margin-top: 20px;'></div>", unsafe_allow_html=True)
+
+st.markdown(
+    '''
+    <div style="background-color: #f1f6fb; border-left: 4px solid #4a90e2; padding: 10px; border-radius: 6px;">
+        Objective: identify which types of coverage have the highest proportion of atypical cases.
+    </div>
+    ''',
+    unsafe_allow_html=True
+)
+
+fig, ax = plt.subplots(figsize=(10, 5))
+sns.barplot(
+    data=df_filtered,
+    x="coverage_type",
+    y="is_suspicious",
+    estimator=lambda x: sum(x)/len(x),
+    ci=None,
+    ax=ax,
+    palette="Blues"
+)
+ax.set_title("Proportion of anomalies by coverage type")
+ax.set_ylabel("Proportion of atypical cases")
+ax.set_xlabel("Coverage type")
+st.pyplot(fig)
+
+
 
 # =====================
 # 9. Anomaly Frequency by Time of Day
