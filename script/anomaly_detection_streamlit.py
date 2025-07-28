@@ -307,20 +307,26 @@ plt.rcParams.update({
 })
 shap.plots.colors.red_blue = plt.get_cmap("Blues")
 
-# Top 100 y caso más sospechoso
-# Calcular los scores nuevamente sobre el subconjunto filtrado
+# =====================
+# SHAP sobre top 100 más sospechosos del subconjunto filtrado
+# =====================
+
+# 1. Obtener scores del subconjunto filtrado
 scores_filtered = iso_model.decision_function(X_scaled_df)
 
-# Obtener los índices de los 100 casos más sospechosos
+# 2. Indices de top 100 del subconjunto (no global)
 top_100_idx = np.argsort(scores_filtered)[-100:]
 
-# Seleccionar esos 100 casos
+# 3. Subset de los 100 casos más sospechosos
 X_top100 = X_scaled_df.iloc[top_100_idx]
 
+# 4. Recalcular SHAP values sobre top 100
+explainer = shap.Explainer(iso_model.decision_function, X_top100)
+shap_values = explainer(X_top100)
 
+# 5. Mostrar gráfico global (summary plot)
+shap.plots.beeswarm(shap_values, max_display=10)
 
-
-shap_values_top100 = explainer(X_top100)
 
 # Resetear el índice para asegurar alineación
 df_filtered_reset = df_filtered.reset_index(drop=True)
