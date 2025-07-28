@@ -256,14 +256,8 @@ st.download_button(
 )
 
 # =====================
-# 10. Explainability of anomaly detection (SHAP)
+# 8. Explainability of anomaly detection (SHAP)
 # =====================
-
-import shap
-from sklearn.ensemble import IsolationForest
-from sklearn.preprocessing import StandardScaler
-
-# Título general
 st.markdown("""
 <div style="background-color:#2c3e50; padding: 10px 15px; border-radius: 5px;">
     <h3 style="color:white; margin:0;">Explainability of anomaly detection (SHAP)</h3>
@@ -272,7 +266,6 @@ st.markdown("""
 
 st.markdown("<div style='margin-top: 20px;'></div>", unsafe_allow_html=True)
 
-# Caja explicativa
 st.markdown("""
 <div style="background-color: #f1f6fb; border-left: 4px solid #4a90e2; padding: 10px; border-radius: 6px;">
     We use SHAP (SHapley Additive exPlanations) to interpret how the model determines whether a claim is atypical.<br><br>
@@ -281,7 +274,7 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 st.markdown("<div style='margin-top: 20px;'></div>", unsafe_allow_html=True)
-# Preprocesamiento
+
 features = [
     "insured_amount", "claim_amount", "months_since_policy_start",
     "claim_hour", "previous_claim_count", "customer_seniority_years"
@@ -291,8 +284,6 @@ scaler = StandardScaler()
 X_scaled = scaler.fit_transform(X)
 X_scaled_df = pd.DataFrame(X_scaled, columns=features)
 
-
-# Modelo y SHAP
 iso_model = IsolationForest(contamination=0.015, random_state=42)
 iso_model.fit(X_scaled_df)
 explainer = shap.Explainer(iso_model.decision_function, X_scaled_df)
@@ -306,28 +297,14 @@ plt.rcParams.update({
     "legend.fontsize": 8
 })
 shap.plots.colors.red_blue = plt.get_cmap("Blues")
-# =====================
-# SHAP sobre top 100 más sospechosos del subconjunto filtrado
-# =====================
 
-# 1. Obtener scores del subconjunto filtrado (más bajos = más anómalos)
+#Top 100
 scores_filtered = iso_model.decision_function(X_scaled_df)
-
-# 2. Índices de top 100 del subconjunto (los más anómalos)
 top_100_idx = np.argsort(scores_filtered)[:100]  # los menores scores indican mayor anomalía
-
-# 3. Subset de los 100 casos más sospechosos
 X_top100 = X_scaled_df.iloc[top_100_idx]
-
-# 4. Calcular SHAP values sobre los 100 más sospechosos
-
-
 shap_values_top100 = explainer(X_top100)
-
-# 6. Explicación individual del caso más sospechoso del subconjunto filtrado
 df_filtered_reset = df_filtered.reset_index(drop=True)
 idx_most_suspicious = np.argmin(scores_filtered)
-
 X_one = X_scaled_df.iloc[[idx_most_suspicious]]
 shap_value_one = explainer(X_one)
 
@@ -359,9 +336,6 @@ with col2:
     plt.close(fig_waterfall)
     plt.close("all") 
 
-st.markdown("### 🧪 Checkpoint: inicio bloque 9 (time of day)")
-
-
 # =====================
 # 9. Anomaly Frequency by Time of Day
 # =====================
@@ -390,7 +364,7 @@ ax.set_ylabel("Number of Atypical Claims")
 st.pyplot(fig)
 
 # =====================
-# 9. Time Since Policy Start vs. Anomalies
+# 10. Time Since Policy Start vs. Anomalies
 # =====================
 st.markdown("""
 <div style="background-color:#2c3e50; padding: 10px 15px; border-radius: 5px;">
