@@ -358,22 +358,19 @@ with col2:
     st.pyplot(fig_waterfall)
     plt.close(fig_waterfall)
 
-## CHECK
-
-import shap
-import numpy as np
-import streamlit as st
-
-# Supongamos que ya tenés iso_model y X_scaled_df
 scores = iso_model.decision_function(X_scaled_df)
+explainer = shap.Explainer(iso_model.decision_function, X_scaled_df)
 shap_values = explainer(X_scaled_df)
 
-# Mostrar rangos
-st.markdown("### 🔍 Comparación de rangos")
-st.write(f"**Rango del modelo (f(x))**: {scores.min():.3f} a {scores.max():.3f}")
-st.write(f"**Rango de SHAP values**: {shap_values.values.min():.3f} a {shap_values.values.max():.3f}")
+mean_fx = scores.mean()
+mean_shap_sum = shap_values.values.sum(axis=1).mean()
+mean_base = shap_values.base_values.mean()
 
-
+st.markdown("### 🔎 Verificación de escala")
+st.write(f"Media de f(x): {mean_fx:.3f}")
+st.write(f"Media de SHAP sum: {mean_shap_sum:.3f}")
+st.write(f"Media de base_value (E[f(x)]): {mean_base:.3f}")
+st.write(f"Total esperado: {mean_shap_sum + mean_base:.3f}")
 
 # =====================
 # 9. Anomaly Frequency by Time of Day
