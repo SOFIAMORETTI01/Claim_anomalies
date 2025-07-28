@@ -296,6 +296,7 @@ X_scaled_df = pd.DataFrame(X_scaled, columns=features)
 iso_model = IsolationForest(contamination=0.015, random_state=42)
 iso_model.fit(X_scaled_df)
 explainer = shap.Explainer(iso_model.decision_function, X_scaled_df)
+
 plt.rcParams.update({
     "font.size": 8,
     "axes.titlesize": 10,
@@ -325,7 +326,7 @@ shap_values_top100 = explainer(X_top100)
 
 # 6. Explicación individual del caso más sospechoso del subconjunto filtrado
 df_filtered_reset = df_filtered.reset_index(drop=True)
-idx_most_suspicious = df_filtered_reset["suspicion_score"].idxmax()
+idx_most_suspicious = np.argmin(scores_filtered)
 
 X_one = X_scaled_df.iloc[[idx_most_suspicious]]
 shap_value_one = explainer(X_one)
