@@ -358,19 +358,6 @@ with col2:
     st.pyplot(fig_waterfall)
     plt.close(fig_waterfall)
 
-### CHECKKK
-scores = iso_model.decision_function(X_scaled_df)
-print("=== Comparación de rangos ===")
-print(f"Rango del modelo (f(x)): {scores.min():.3f} a {scores.max():.3f}")
-print(f"Rango de SHAP values:     {shap_values.values.min():.3f} a {shap_values.values.max():.3f}")
-i = 0  # Elegí cualquier índice
-score_real = scores[i]
-score_shap_sum = shap_values.values[i].sum() + shap_values.base_values[i]
-print("\n=== Verificación para una observación ===")
-print(f"f(x) del modelo        : {score_real:.6f}")
-print(f"Suma SHAP + base value: {score_shap_sum:.6f}")
-print(f"Diferencia             : {abs(score_real - score_shap_sum):.6f}")
-
 
 # =====================
 # 9. Anomaly Frequency by Time of Day
