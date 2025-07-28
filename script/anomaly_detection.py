@@ -81,7 +81,7 @@ explainer = shap.Explainer(iso_model, X_scaled_df)
 
 # 8.2 SHAP global: beeswarm plot for top 100 most suspicious claims
 top_100_idx = df.sort_values("suspicion_score", ascending=False).index[:100]
-X_top100 = X_scaled_df.iloc[top_100_idx.to_list()]
+X_top100 = X_scaled_df.loc[top_100_idx.to_list()]
 shap_values_top100 = explainer(X_top100)
 
 print("📊 SHAP Summary Plot (Top 100 most suspicious claims):")
@@ -90,7 +90,7 @@ plt.close()
 
 # 8.3 SHAP individual: waterfall plot for the most suspicious claim
 idx_most_suspicious = df["suspicion_score"].idxmax()
-X_one = X_scaled_df.iloc[[idx_most_suspicious]]
+X_one = X_scaled_df.loc[[idx_most_suspicious]]
 shap_value_one = explainer(X_one)
 
 print("📉 SHAP Waterfall Plot (Most suspicious claim):")
