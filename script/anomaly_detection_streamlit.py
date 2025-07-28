@@ -34,7 +34,7 @@ st.markdown(
             This dashboard allows actuarial and audit teams to explore potentially atypical claims using unsupervised Machine Learning techniques.
         </p>
         <p style="color:#333333; font-size:15px;">
-            <strong>Model used:</strong> Isolation Forest applied to selected claim variables..<br>
+            <strong>Model used:</strong> Isolation Forest applied to selected claim variables.<br>
             <strong>Objetive:</strong> Support the early identification of cases that require review due to behavior outside of expected patterns.
         </p>
     </div>
