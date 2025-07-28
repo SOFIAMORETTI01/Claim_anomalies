@@ -330,12 +330,6 @@ idx_most_suspicious = df_filtered_reset["suspicion_score"].idxmax()
 X_one = X_scaled_df.iloc[[idx_most_suspicious]]
 shap_value_one = explainer(X_one)
 
-fig_waterfall = plt.figure(figsize=(6, 4))
-shap.plots.waterfall(shap_value_one[0], show=False)
-st.pyplot(fig_waterfall)
-plt.close(fig_waterfall)
-
-
 # Columnas y títulos estilizados
 col1, col2 = st.columns(2)
 
