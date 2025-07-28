@@ -295,7 +295,7 @@ X_scaled_df = pd.DataFrame(X_scaled, columns=features)
 # Modelo y SHAP
 iso_model = IsolationForest(contamination=0.015, random_state=42)
 iso_model.fit(X_scaled_df)
-
+explainer = shap.Explainer(iso_model.decision_function, X_scaled_df)
 plt.rcParams.update({
     "font.size": 8,
     "axes.titlesize": 10,
@@ -319,7 +319,8 @@ top_100_idx = np.argsort(scores_filtered)[:100]  # los menores scores indican ma
 X_top100 = X_scaled_df.iloc[top_100_idx]
 
 # 4. Calcular SHAP values sobre los 100 más sospechosos
-explainer = shap.Explainer(iso_model, X_top100)
+
+
 shap_values_top100 = explainer(X_top100)
 
 # 6. Explicación individual del caso más sospechoso del subconjunto filtrado
@@ -378,7 +379,7 @@ st.markdown(
 )
 
 fig, ax = plt.subplots(figsize=(10, 5))  
-sns.histplot(data=df_filtered[df_filtered["is_suspicious"] == 1], x="claim_hour", bins=24, ax=ax, color="steelblue")
+sns.histplot(data=df_filtered[df_filtered["is_suspicious"] == 1], x="claim_hour", bins=24, binrange=(0, 24), discrete=True,ax=ax, color="steelblue")
 ax.set_title("Frequency of anomalies by time of claim")
 ax.set_xlabel("Hour of the Day")
 ax.set_ylabel("Number of Atypical Claims")
