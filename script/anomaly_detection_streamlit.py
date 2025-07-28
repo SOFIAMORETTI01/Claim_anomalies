@@ -295,7 +295,6 @@ X_scaled_df = pd.DataFrame(X_scaled, columns=features)
 # Modelo y SHAP
 iso_model = IsolationForest(contamination=0.015, random_state=42)
 iso_model.fit(X_scaled_df)
-explainer = shap.Explainer(iso_model, X_scaled_df)
 
 plt.rcParams.update({
     "font.size": 8,
