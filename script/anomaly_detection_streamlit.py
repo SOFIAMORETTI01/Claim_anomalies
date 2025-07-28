@@ -358,6 +358,38 @@ with col2:
     st.pyplot(fig_waterfall)
     plt.close(fig_waterfall)
 
+### CHECKKK
+import shap
+import numpy as np
+from sklearn.ensemble import IsolationForest
+from sklearn.preprocessing import StandardScaler
+
+# Suponiendo que ya tenés tu modelo y tus datos
+# iso_model: tu modelo Isolation Forest ya entrenado
+# X_scaled_df: tu DataFrame escalado
+
+# 1. Obtener scores reales del modelo
+scores = iso_model.decision_function(X_scaled_df)
+
+# 2. Calcular SHAP values
+explainer = shap.Explainer(iso_model.decision_function, X_scaled_df)
+shap_values = explainer(X_scaled_df)
+
+# 3. Chequear escala de SHAP values vs modelo
+print("=== Comparación de rangos ===")
+print(f"Rango del modelo (f(x)): {scores.min():.3f} a {scores.max():.3f}")
+print(f"Rango de SHAP values:     {shap_values.values.min():.3f} a {shap_values.values.max():.3f}")
+
+# 4. Verificar si SHAP suma bien para un ejemplo puntual
+i = 0  # Elegí cualquier índice
+score_real = scores[i]
+score_shap_sum = shap_values.values[i].sum() + shap_values.base_values[i]
+
+print("\n=== Verificación para una observación ===")
+print(f"f(x) del modelo        : {score_real:.6f}")
+print(f"Suma SHAP + base value: {score_shap_sum:.6f}")
+print(f"Diferencia             : {abs(score_real - score_shap_sum):.6f}")
+
 
 # =====================
 # 9. Anomaly Frequency by Time of Day
