@@ -308,8 +308,10 @@ plt.rcParams.update({
 shap.plots.colors.red_blue = plt.get_cmap("Blues")
 
 # Top 100 y caso más sospechoso
-top_100_idx = df_filtered["suspicion_score"].sort_values(ascending=False).reset_index(drop=True).index[:100]
-X_top100 = X_scaled_df.iloc[top_100_idx.to_list()]
+# Reordenamos el df filtrado por el puntaje más alto
+top_100_idx = df_filtered.sort_values("suspicion_score", ascending=False).head(100).index
+X_top100 = X_scaled_df.loc[top_100_idx]
+
 shap_values_top100 = explainer(X_top100)
 
 # Resetear el índice para asegurar alineación
