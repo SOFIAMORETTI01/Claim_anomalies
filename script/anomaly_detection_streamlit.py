@@ -357,7 +357,10 @@ with col2:
     shap.plots.waterfall(shap_value_one[0], show=False)
     st.pyplot(fig_waterfall)
     plt.close(fig_waterfall)
-plt.close("all") 
+    plt.close("all") 
+
+st.markdown("### 🧪 Checkpoint: inicio bloque 9 (time of day)")
+
 
 # =====================
 # 9. Anomaly Frequency by Time of Day
