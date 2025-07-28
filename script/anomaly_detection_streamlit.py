@@ -308,9 +308,16 @@ plt.rcParams.update({
 shap.plots.colors.red_blue = plt.get_cmap("Blues")
 
 # Top 100 y caso más sospechoso
-# Reordenamos el df filtrado por el puntaje más alto
-top_100_idx = df_filtered.sort_values("suspicion_score", ascending=False).head(100).index
-X_top100 = X_scaled_df.loc[top_100_idx]
+# Calcular los scores nuevamente sobre el subconjunto filtrado
+scores_filtered = model.decision_function(x_scaled_df)
+
+# Obtener los índices de los 100 casos más sospechosos
+top_100_idx = np.argsort(scores_filtered)[-100:]
+
+# Seleccionar esos 100 casos
+X_top100 = x_scaled_df.iloc[top_100_idx]
+
+
 
 shap_values_top100 = explainer(X_top100)
 
