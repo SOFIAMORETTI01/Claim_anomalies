@@ -37,9 +37,7 @@ The following anomaly detection models were implemented:
 
 Each of these models generates an **anomaly score** per claim, which is used to rank records by their level of suspicion.
 
----
-
-#### 🧩 Model Explainability
+##### 🧩 Model Explainability
 
 To enhance model transparency and provide interpretable results, **SHAP (SHapley Additive exPlanations)** was used to explain the outputs of the **Isolation Forest** model.
 
