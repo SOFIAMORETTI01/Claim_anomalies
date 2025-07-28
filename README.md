@@ -25,16 +25,29 @@ The goal is to assign a **suspicion score** to each claim and **flag outliers** 
 
 ---
 
-## 🧠 Methods
+### 🧠 Methods
 
-This project uses **unsupervised learning** due to the lack of labeled data.  
-Implemented techniques include:
+This project applies **unsupervised learning** techniques due to the lack of labeled (fraud vs. non-fraud) claims data. The goal is to detect atypical or suspicious patterns without requiring predefined outcomes.
 
-- **Isolation Forest:** Detects outliers by randomly isolating observations.  
-- **Local Outlier Factor:** Compares local density of each observation to its neighbors.  
-- **DBSCAN:** Clusters dense regions and identifies noise points.
+The following anomaly detection models were implemented:
 
-Each model generates an **anomaly score** used to rank claims by suspicion level.
+- **Isolation Forest**: Identifies outliers by randomly partitioning data and measuring how quickly an observation becomes isolated. Points that are isolated in fewer steps are more likely to be anomalies.
+- **Local Outlier Factor (LOF)**: Calculates the local density deviation of a given data point with respect to its neighbors. Observations in sparse regions relative to their surroundings are flagged as potential anomalies.
+- **DBSCAN (Density-Based Spatial Clustering of Applications with Noise)**: Groups nearby points into clusters based on density and labels sparse observations as noise (i.e., anomalies).
+
+Each of these models generates an **anomaly score** per claim, which is used to rank records by their level of suspicion.
+
+---
+
+#### 🧩 Model Explainability
+
+To enhance model transparency and provide interpretable results, **SHAP (SHapley Additive exPlanations)** was used to explain the outputs of the **Isolation Forest** model.
+
+Although SHAP is primarily designed for supervised models, it can be adapted to unsupervised settings when the model produces a meaningful continuous output—such as the anomaly score in Isolation Forest.
+
+> In this context, SHAP explains **which input features most contributed to a claim being considered suspicious**, helping analysts better understand and trust the model’s reasoning.
+
+
 
 ---
 
