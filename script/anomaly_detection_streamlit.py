@@ -323,12 +323,6 @@ X_top100 = X_scaled_df.iloc[top_100_idx]
 explainer = shap.Explainer(iso_model, X_top100)
 shap_values_top100 = explainer(X_top100)
 
-# 5. Mostrar gráfico global (summary plot)
-fig_beeswarm = plt.figure(figsize=(6, 4))
-shap.plots.beeswarm(shap_values_top100, max_display=10, show=False)
-st.pyplot(fig_beeswarm)
-plt.close(fig_beeswarm)
-
 # 6. Explicación individual del caso más sospechoso del subconjunto filtrado
 df_filtered_reset = df_filtered.reset_index(drop=True)
 idx_most_suspicious = df_filtered_reset["suspicion_score"].idxmax()
