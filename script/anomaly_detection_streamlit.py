@@ -366,31 +366,12 @@ import streamlit as st
 
 # Supongamos que ya tenés iso_model y X_scaled_df
 scores = iso_model.decision_function(X_scaled_df)
-
-explainer = shap.Explainer(iso_model.decision_function, X_scaled_df)
-shap_values = explainer(X_scaled_df)
-
 # Mostrar rangos
 st.markdown("### 🔍 Comparación de rangos")
 st.write(f"**Rango del modelo (f(x))**: {scores.min():.3f} a {scores.max():.3f}")
 st.write(f"**Rango de SHAP values**: {shap_values.values.min():.3f} a {shap_values.values.max():.3f}")
 
-# Verificar para una observación puntual
-i = 0
-score_real = scores[i]
-score_shap_sum = shap_values.values[i].sum() + shap_values.base_values[i]
-diff = abs(score_real - score_shap_sum)
 
-st.markdown("### ✅ Verificación para una observación")
-st.write(f"**f(x) del modelo**        : {score_real:.6f}")
-st.write(f"**Suma SHAP + base value**: {score_shap_sum:.6f}")
-st.write(f"**Diferencia**             : {diff:.6f}")
-
-# Si querés mostrar alerta si algo falla:
-if diff > 1e-4:
-    st.error("⚠️ ¡La suma de SHAP no coincide con f(x)! Revisa la escala.")
-else:
-    st.success("✔️ La escala de SHAP está correcta.")
 
 # =====================
 # 9. Anomaly Frequency by Time of Day
