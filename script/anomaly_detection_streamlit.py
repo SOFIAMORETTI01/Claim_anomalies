@@ -366,6 +366,8 @@ import streamlit as st
 
 # Supongamos que ya tenés iso_model y X_scaled_df
 scores = iso_model.decision_function(X_scaled_df)
+shap_values = explainer(X_scaled_df)
+
 # Mostrar rangos
 st.markdown("### 🔍 Comparación de rangos")
 st.write(f"**Rango del modelo (f(x))**: {scores.min():.3f} a {scores.max():.3f}")
