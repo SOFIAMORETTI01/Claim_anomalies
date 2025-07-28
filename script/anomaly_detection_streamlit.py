@@ -306,35 +306,41 @@ plt.rcParams.update({
     "legend.fontsize": 8
 })
 shap.plots.colors.red_blue = plt.get_cmap("Blues")
-
 # =====================
 # SHAP sobre top 100 más sospechosos del subconjunto filtrado
 # =====================
 
-# 1. Obtener scores del subconjunto filtrado
+# 1. Obtener scores del subconjunto filtrado (más bajos = más anómalos)
 scores_filtered = iso_model.decision_function(X_scaled_df)
 
-# 2. Indices de top 100 del subconjunto (no global)
-top_100_idx = np.argsort(scores_filtered)[-100:]
+# 2. Índices de top 100 del subconjunto (los más anómalos)
+top_100_idx = np.argsort(scores_filtered)[:100]  # los menores scores indican mayor anomalía
 
 # 3. Subset de los 100 casos más sospechosos
 X_top100 = X_scaled_df.iloc[top_100_idx]
 
-# 4. Recalcular SHAP values sobre top 100
-explainer = shap.Explainer(iso_model.decision_function, X_top100)
-shap_values = explainer(X_top100)
+# 4. Calcular SHAP values sobre los 100 más sospechosos
+explainer = shap.Explainer(iso_model, X_top100)
+shap_values_top100 = explainer(X_top100)
 
 # 5. Mostrar gráfico global (summary plot)
-shap.plots.beeswarm(shap_values, max_display=10)
+fig_beeswarm = plt.figure(figsize=(6, 4))
+shap.plots.beeswarm(shap_values_top100, max_display=10, show=False)
+st.pyplot(fig_beeswarm)
+plt.close(fig_beeswarm)
 
-
-# Resetear el índice para asegurar alineación
+# 6. Explicación individual del caso más sospechoso del subconjunto filtrado
 df_filtered_reset = df_filtered.reset_index(drop=True)
-
 idx_most_suspicious = df_filtered_reset["suspicion_score"].idxmax()
-X_one = X_scaled_df.iloc[[idx_most_suspicious]]
 
+X_one = X_scaled_df.iloc[[idx_most_suspicious]]
 shap_value_one = explainer(X_one)
+
+fig_waterfall = plt.figure(figsize=(6, 4))
+shap.plots.waterfall(shap_value_one[0], show=False)
+st.pyplot(fig_waterfall)
+plt.close(fig_waterfall)
+
 
 # Columnas y títulos estilizados
 col1, col2 = st.columns(2)
