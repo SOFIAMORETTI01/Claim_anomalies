@@ -43,7 +43,7 @@ To enhance model transparency and provide interpretable results, **SHAP (SHapley
 
 Although SHAP is primarily designed for supervised models, it can be adapted to unsupervised settings when the model produces a meaningful continuous output—such as the anomaly score in Isolation Forest.
 
-> In this context, SHAP explains **which input features most contributed to a claim being considered suspicious**, helping analysts better understand and trust the model’s reasoning.
+In this context, SHAP explains **which input features most contributed to a claim being considered suspicious**, helping analysts better understand and trust the model’s reasoning.
 
 
 
