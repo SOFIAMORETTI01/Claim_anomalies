@@ -309,13 +309,14 @@ shap.plots.colors.red_blue = plt.get_cmap("Blues")
 
 # Top 100 y caso más sospechoso
 # Calcular los scores nuevamente sobre el subconjunto filtrado
-scores_filtered = model.decision_function(x_scaled_df)
+scores_filtered = iso_model.decision_function(X_scaled_df)
 
 # Obtener los índices de los 100 casos más sospechosos
 top_100_idx = np.argsort(scores_filtered)[-100:]
 
 # Seleccionar esos 100 casos
-X_top100 = x_scaled_df.iloc[top_100_idx]
+X_top100 = X_scaled_df.iloc[top_100_idx]
+
 
 
 
