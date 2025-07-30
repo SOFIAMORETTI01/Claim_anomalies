@@ -308,7 +308,6 @@ idx_most_suspicious = np.argmin(scores_filtered)
 X_one = X_scaled_df.iloc[[idx_most_suspicious]]
 shap_value_one = explainer(X_one)
 
-# Columnas y títulos estilizados
 col1, col2 = st.columns(2)
 
 with col1:
@@ -359,8 +358,8 @@ st.markdown(
 fig, ax = plt.subplots(figsize=(10, 5))  
 sns.histplot(data=df_filtered[df_filtered["is_suspicious"] == 1], x="claim_hour", bins=24, binrange=(0, 24), discrete=True,ax=ax, color="steelblue")
 ax.set_title("Frequency of anomalies by time of claim")
-ax.set_xlabel("Hour of the Day")
-ax.set_ylabel("Number of Atypical Claims")
+ax.set_xlabel("Hour of the day")
+ax.set_ylabel("Number of atypical claims")
 st.pyplot(fig)
 
 # =====================
@@ -396,8 +395,8 @@ sns.kdeplot(
     label="Non-atypical claims",
     color="#a7c7e7"
 )
-ax.set_title("Distribution of Time Since Policy Start at the Time of Claim")
-ax.set_xlabel("Months Since Policy Start")
+ax.set_title("Time since policy start")
+ax.set_xlabel("Months since policy start")
 ax.set_ylabel("Density")
 ax.legend()
 st.pyplot(fig)
