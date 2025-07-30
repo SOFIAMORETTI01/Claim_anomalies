@@ -368,7 +368,7 @@ st.pyplot(fig)
 # =====================
 st.markdown("""
 <div style="background-color:#2c3e50; padding: 10px 15px; border-radius: 5px;">
-    <h3 style="color:white; margin:0;">Do new customers generate more atypical claims</h3>
+    <h3 style="color:white; margin:0;">Do new customers generate more atypical claims?</h3>
 </div>
 """, unsafe_allow_html=True)
 st.markdown("<div style='margin-top: 20px;'></div>", unsafe_allow_html=True)
